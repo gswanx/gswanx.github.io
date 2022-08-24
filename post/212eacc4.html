@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>TOR的防御机制PADDING | 逃    避    現    實</title><meta name="keywords" content="Tor"><meta name="author" content="1ustinianus"><meta name="copyright" content="1ustinianus"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="通过协商发送特殊数据包来混淆流量特征">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TOR的防御机制PADDING">
+<meta property="og:url" content="http://gswanx.github.io/post/212eacc4.html">
+<meta property="og:site_name" content="逃    避    現    實">
+<meta property="og:description" content="通过协商发送特殊数据包来混淆流量特征">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://gswanx.github.io/img/headddd.jpg">
+<meta property="article:published_time" content="2022-08-22T03:42:17.000Z">
+<meta property="article:modified_time" content="2022-08-24T02:42:14.882Z">
+<meta property="article:author" content="1ustinianus">
+<meta property="article:tag" content="Tor">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://gswanx.github.io/img/headddd.jpg"><link rel="shortcut icon" href="/img/17150526893.png"><link rel="canonical" href="http://gswanx.github.io/post/212eacc4"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":true,"languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'TOR的防御机制PADDING',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-08-24 10:42:14'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><link rel="stylesheet" href="/css/universe.css"><link rel="stylesheet" href="/css/title.css"><link rel="stylesheet" href="//at.alicdn.com/t/c/font_3571753_hc60oskdsr8.css"><meta name="generator" content="Hexo 6.2.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/headddd.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/754566.png')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">逃    避    現    實</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间线</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group hide" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 列表</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fas fa-video"></i><span> Movie</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">TOR的防御机制PADDING</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-08-22T03:42:17.000Z" title="发表于 2022-08-22 11:42:17">2022-08-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-08-24T02:42:14.882Z" title="更新于 2022-08-24 10:42:14">2022-08-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Tor/">Tor</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="TOR的防御机制PADDING"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><span id="jiaquanluyou" style='color:black;background:yellow;font-family:hei;font-weight:bold;font-size:25px'>前置的一些基础原理见: <a href="75310f08.html">TOR原理</a></span></p>
+<h1 id="0-概述"><a href="#0-概述" class="headerlink" title="0_概述"></a>0_概述</h1><p><a href="75310f08.html">TOR原理</a>那篇文章的第三部分已经说明过, TOR cell是TOR中的基本通信单元, 一个TOR cell的大小固定为<strong>512</strong>或<strong>514</strong>字节</p>
+<p>尽管TOR的机制能够有效地保护通信双方的身份以及通信内容不被泄露, 但是其实很早就有研究提出可以通过指纹攻击的方式来从流量模式 (<strong>例如数据包的序列特征</strong>) 入手来检测出TOR流量了. 对于监管者 (例如运营商) 来说, 其实也并不用彻底掌握用户到底在暗网中看到了啥不该看的内容, 只需要简单地检测出有暗网流量产生, 然后再把它BAN掉就行了. 因此这类能够有效检测出TOR流量的指纹攻击手段确实对TOR的安全性产生了不小的威胁. TOR必须采取一定的应对手段来进一步提升自己的安全性. </p>
+<blockquote>
+<p>•Kwon, Albert et al. “Circuit Fingerprinting Attacks: Passive Deanonymization of Tor Hidden Services.” <em>USENIX Security Symposium</em> (2015).</p>
+<p>这篇文章利用简单的决策树算法, 依赖的特征仅仅是<code>Client</code>或<code>HS</code>在构建<code>IPO</code>或<code>RPO</code>链路时收发携带不同<code>Command</code>的Tor cell的顺序关系, 就能够检测出当前链路的类型(<strong>Client端IPO&#x2F; Client端RPO&#x2F; HS端IPO&#x2F; HS端RPO</strong>)</p>
+<p>当时也是立马引起了Tor官方的反应:</p>
+<img src="/images/tor-padding/image-20220822120634208.png" alt="image-20220822120634208" style="zoom:67%;" />
+
+<p>很快, Tor官方就提出了应对手段, 并在0.4.1.1-alpha版本里首次实现, 也就是本篇讨论的重点:  <strong><code>Padding</code>机制</strong>.</p>
+</blockquote>
+<p><code>Padding</code>说白了就是在正常的Tor流量中混入一些特殊且无用的数据包(Tor cell),  这些数据包由<code>Client</code>和 某个Tor链路上的一个<code>OR</code>协商后互相发送和接收 , 以破坏在<code>Client</code>和这个<code>OR</code>之间截获流量的观察者所看到的「Tor流量在数据包分布等方面的特征」, 这些刻意发送的数据包被称为 <code>Padding cell</code>.  </p>
+<p>目前官方提出了两种<code>Padding</code>方式: <code>connection-level padding</code>和<code>circuit-level padding</code>, 分别应对处在不同位置的攻击者:</p>
+<div align='center' style='font-family:hei;font-weight:bold'>
+    (下图中上方的链路为IPO链路, 下方的链路为RPO链路)
+</div>
+
+<img src="/images/tor-padding/image-20220822153045204.png" alt="image-20220822153045204" style="zoom:67%;" />
+
+<p>对于<code>connection-level padding</code>来说,后者就是普通的数据流量, 为了有所区分,当<code>circuit-level padding</code>工作时,<code>connection-level padding</code>不工作. </p>
+<br>
+
+<hr>
+<br>
+
+
+
+<h1 id="1-connection-level-padding"><a href="#1-connection-level-padding" class="headerlink" title="1_connection-level padding"></a>1_connection-level padding</h1><p>此种<code>Padding cell</code>的 <code>Command</code>字段值为<strong>0</strong>(<code>PADDING</code>)  (见<a href="75310f08.html">TOR原理3.2</a>) , 一般由<code>Client</code>和<code>Entry</code>之间协商后发送和接收.</p>
+<p><code>connection-level padding</code>较为简单,  应对在<code>Client</code>和<code>Entry</code>之间控制了任何普通的非Tor网络节点的攻击者, 这些截获流量的攻击者因为没有Tor链路上<code>OR</code>之间协商的密钥, 能看见的只是被下层的TLS等协议加密后的密文流量.  </p>
+<p>而与此相对, 即使不是Tor cell的接收者, 一个Tor链路上的<code>OR</code>也能够解读出一个Tor cell的前3字节内容, 这部分内容包含2字节的<code>Circuit ID</code>和1字节的<code>Command</code>, 能够解读<code>Command</code>字段也就意味着<code>OR</code>都能够识别出此类<code>Padding cell</code>. 因此, 如果一个攻击者控制了Tor链路上<code>Entry</code>这样的节点, <code>connection-level padding</code>也就失效了. </p>
+<img src="/images/tor-padding/image-20220822154318021.png" alt="image-20220822154318021" style="zoom:67%;" />
+
+<p>在<code>Client</code>和<code>Entry</code>之间应用<code>connection-level padding</code>时:</p>
+<p>两个节点共同持有一个关于TLS连接应用数据的计时器. 每当两端收到一个正常的数据包,它们都会根据一个特定的超时分布在1.5s至9.5s之间取一个<strong>超时值</strong>, 如果在这个超时值之前收到了下一个携带真实数据的Tor cell,那么重新选择该值; 如果在此之前没有收到真实的Tor cell,那么将会发送<code>Padding cell</code></p>
+<p>由此以来, 在不超过10s的超时时间到达之前, 链路上总会有真实的Tor cell或者<code>Padding cell</code>被发送, 那么分不清真实Tor cell和<code>Padding cell</code>的链路上的攻击者就无法通过数据包间隔时间等特征来记录流量模式</p>
+<br>
+
+<hr>
+<br>
+
+<h1 id="2-circuit-level-padding"><a href="#2-circuit-level-padding" class="headerlink" title="2_circuit-level padding"></a>2_circuit-level padding</h1><p>假设攻击者控制了Tor 链路上的<code>Entry</code>节点. 那么他能够看见在此被TLS解密后的Tor cell, 并读取每个Tor cell的前3字节数据. 也就能识别并丢弃来自<code>connection-level padding</code>的<code>Padding cell</code></p>
+<p>通过记录流量特征, 攻击者还能够察觉当前链路的类型, 是访问互联网服务的三跳链路, 还是用于访问<code>HS</code>的<code>IPO</code>或<code>RPO</code>链路</p>
+<p><code>circuit-level padding</code>的目的就是避免控制了<code>Entry</code>的攻击者识别出链路的类型</p>
+<img src="/images/tor-padding/image-20220822161841331.png" alt="image-20220822161841331" style="zoom:67%;" />
+
+<p><code>circuit-level padding</code>由<code>Client</code>和<code>Middle</code>互相发送和接收<code>Padding cell</code>, 这里它们用于发送<code>Padding cell</code>的程序视为一个状态机, 称为<code>Padding Machine</code></p>
+<p>此种<code>Padding cell</code>的<code>Command</code>字段值为<strong>3</strong>(<code>RELAY</code>), <code>Relay Command</code>的值为10(<code>Drop</code>) ,对于只能在在<code>Entry</code>处观察到Tor cell的前3字节的攻击者来说, 此种cell和一般的Tor cell无异.</p>
+<p><br><br></p>
+<h2 id="2-1PADDING协商"><a href="#2-1PADDING协商" class="headerlink" title="2.1PADDING协商"></a>2.1PADDING协商</h2><p>执行<code>circuit-level padding</code>的是部署在<code>Client</code>和<code>middle</code>上的<strong>padding状态机</strong></p>
+<p>在进行padding之前, 需要通过发送携带特殊的<code>Relay Command</code>字段值(**41&#x2F;42)**的<code>RELAY cell</code>来进行PADDING协商:</p>
+<img src="/images/tor-padding/1.png" alt="padding_relay_cell" style="zoom:67%;" />
+
+<p>分别是由padding的发起方发送的<code>PADDING_NEGOTIATE_cell</code>(41)和由响应方发送的<code>PADDING_NEGOTIATED_cell</code>(42)</p>
+<p>其中,请求方发送的<code>PADDING_NEGOTIATE_cell</code>的payload中包含以下内容:(下面的结构体struct)</p>
+<img src="/images/tor-padding/2.png" alt="PADDING_NEGOTIATE_cell_payload" style="zoom:67%;" />
+
+<p>其中各个字段:</p>
+<ul>
+<li><p>command &#x3D; <code>「CIRCPAD_COMMAND_START」(2)</code></p>
+</li>
+<li><p>machine_type &#x3D; <code>「CIRCPAD_MACHINE_CIRC_SETUP」(1)</code> <strong>此值用于标记发送它的是发起padding的一方</strong></p>
+</li>
+<li><p>michine_ctr : 当前链路上<code>machine instance</code>的数量, 用于消除关闭请求的歧义,如果该字段不符合事实,那么请求将被忽略</p>
+<br></li>
+</ul>
+<p>当接收方收到<code>PADDING_NEGOTIATE_cell</code>时, 首先检查请求方请求的<code>version</code>等自己是否支持, 然后发送<code>PADDING_NEGOTIATED_cell</code>,其payload包含以下内容:</p>
+<img src="/images/tor-padding/3.png" alt="PADDING_NEGOTIATED_cell_payload" style="zoom:67%;" />
+
+
+
+<p>在收到<code>PADDING_NEGOTIATE_cell</code>之前, <code>Client</code>就可以开始发送<code>Padding cell</code>了</p>
+<p><br><br></p>
+<h2 id="2-2对IPO链路的混淆"><a href="#2-2对IPO链路的混淆" class="headerlink" title="2.2对IPO链路的混淆"></a>2.2对IPO链路的混淆</h2><blockquote>
+<p>tor中,访问互联网网站(非<code>HS</code>)的通信,cell序列一般遵循以下模式: <strong>创建三跳链路 - 请求服务 - 交互应用数据</strong></p>
+<p>([DATA]表示由<code>Client</code>发送给<code>Server</code>的Cell, DATA相反方向的Cell), padding机制需要尽可能把<code>IPO</code>和<code>RPO</code>链路上的cell序列伪装成此种模式:</p>
+<img src="/images/tor-padding/4.png" alt="Normal Circuit" style="zoom:67%;" />
+</blockquote>
+<p>一般来说, <code>IPO</code>链路上的Cell序列表现为:</p>
+<img src="/images/tor-padding/5.png" alt="IPO circuit" style="zoom: 80%;" />
+
+<p>和一般链路对比可以看出, 前面通过<code>RELAY_EXTEND cell</code>建立链路的阶段是相似的, 主要需要将<code>[INTRO1]</code>和<code>[INTRODUCE_ACK]</code>这里混淆成这种形式: </p>
+<img src="/images/tor-padding/6.png" alt="DATA" style="zoom: 80%;" />
+
+<p>在<code>[INTRO1]</code>和<code>[INTRODUCE_ACK]</code>之间发送<code>PADDING_NEGOTIATE_cell</code>和<code>PADDING_NEGOTIATED_cell</code>进行padding协商:</p>
+<img src="/images/tor-padding/7.png" alt="NEGOTIATE" style="zoom: 80%;" />
+
+<p>在此之后, <code>Middle</code>会给<code>Client</code>发送7-10个<code>Padding cell</code>(<strong>RELAY_drop</strong>), 以模拟正常通信中服务器发回数据的过程</p>
+<p><br><br></p>
+<h2 id="2-3对RPO链路的混淆"><a href="#2-3对RPO链路的混淆" class="headerlink" title="2.3对RPO链路的混淆"></a>2.3对RPO链路的混淆</h2><p><code>RPO</code>链路的混淆目标也是一般的Tor三跳链路:</p>
+<img src="/images/tor-padding/4.png" alt="Normal Circuit" style="zoom:67%;" />
+
+<p>一般来说, <code>RPO</code>链路上的Cell序列表现为:</p>
+<img src="/images/tor-padding/8.png" alt="RPO Circuit" style="zoom: 80%;" />
+
+<p>添加<code>Padding cell</code>(<strong>DROP</strong>)后:(前面提过,<code>client</code>在收到<code>PADDING_NEGOTIATED_cell</code>之前就能开始发送<code>Padding cell</code>)</p>
+<img src="/images/tor-padding/9.png" alt="RPO PADDING Circuit" style="zoom: 80%;" />
+
+<p>在此之后,由<code>RPO</code>方向正常传回来自于<code>HS</code>的应用数据即可(不再需要<code>Padding cell</code>)</p>
+<p>因为当<code>RPO</code>链路完全建立完成时,链路上会有来自隐藏服务器端的应用数据,对于无法看到payload的攻击者来说,来自<code>HS</code>的正常cell和<code>Padding cell</code>没有区别,因此此时padding可以停止.</p>
+<p><br><br></p>
+<h2 id="2-4Padding-Machine的工作机制"><a href="#2-4Padding-Machine的工作机制" class="headerlink" title="2.4Padding Machine的工作机制"></a>2.4Padding Machine的工作机制</h2><p><code>Padding Machine</code>是一种状态机, 工作时根据实际情况在不同状态之间进行转换</p>
+<p>首先定义数据流有两种状态:<code>Burst</code>和<code>gap</code></p>
+<img src="/images/tor-padding/10.png" alt="Burst and Gap" style="zoom: 80%;" />
+
+<ul>
+<li><code>Burst</code> : 一段在短时间内集中发送的数据包序列(数据包的密度较大),,此时<code>Padding Machine</code>处于<code>burst mode</code>, padding的需求较小, 在发送<code>Padding cell</code>之前需等待更长的时延.</li>
+<li><code>Gap</code> :一段时间跨度较长的数据包序列(数据包的密度较小),此时链路上的流模式特征性更强, 很可能被攻击者记录并分析, 因此padding的需求较大,<code>Padding Machine</code>处于<code>gap mode</code>,仅等待较短的时延后就可以发送<code>Padding cell</code>.</li>
+</ul>
+<br>
+
+<p>每个<code>Padding Machine</code>都会保存两个直方图<code>HG</code>和<code>HB</code>分别用于在<code>gap mode</code>和<code>burst mode</code>下选择合适的发送<code>Padding cell</code>的等待时延:</p>
+<img src="/images/tor-padding/11.png" alt="Histogram" style="zoom: 80%;" />
+
+<p>其横轴为时延值, 纵轴为<code>Tokens</code>, 表示在某个时延范围(<code>Bin</code>)中选择一个合适的具体时延值的可能性</p>
+<br>
+
+<p><code>Padding Machine</code>的状态转移示意:(其中的S,B,G分别表示其实状态,<code>burst mode</code> 和<code>gap mode</code>)</p>
+<img src="/images/tor-padding/12.png" alt="Histogram" style="zoom: 80%;" />
+
+<ul>
+<li><strong>burst mode:</strong></li>
+</ul>
+<p>在起始状态(S)下,<code>client</code>正不断接收从服务器发回的真实数据,此时进入<code>burst mode</code>, 系统根据<code>HB</code>(<code>burst mode</code>对应的直方图)所给出的概率分布来选择一个发送时延<code>t</code> (此直方图是根据分析大量网络流量而形成的)(来自上一个<code>burst</code>的结束和下一个<code>burst</code>的开始之间的时间差的取样)</p>
+<p>当此节点不断地处理真实数据包,系统会不断地根据<code>HB</code>来选择新的发送时延,不断重复, 系统会停留在<code>burst mode</code></p>
+<p>如果在时延<code>t</code>的范围内没有处理到真实数据包,那么<code>Padding cell</code>将被发送,系统进入<code>gap mode</code></p>
+<p>综上,在<code>burst mode</code>期间,如果发现了一个大于所选延时<code>t</code>的<code>IAT(inter-arrival time)</code> ,那么当前选择的延时<code>t</code>将失效,并且触发<code>gap mode</code></p>
+ <br>
+
+<ul>
+<li><strong>gap mode:</strong></li>
+</ul>
+<p>在,通过<code>HG</code>来选择一个时延<code>t&#39;</code>,并且在时延结束时发送<code>Padding cell</code>, <code>HG</code>同样是通过对大量站点流量中<code>burst</code>内的<code>IAT(inter-arrival time)</code>取样来构建的(这是为了模拟正常<code>burst</code>中的<code>IAT</code>)</p>
+<p>当接收到一个真实的数据包,或者在<code>HG</code>中选择到了一个来自<code>infinity bin</code>(上上图中最右侧的那个bin)范围中的时延值</p>
+<p>此时系统会从<code>gap mode</code>转向<code>burst mode</code></p>
+ <br>
+
+<p>当在<code>burst mode</code>中,当从<code>HB</code>中选择到了一个来自<code>infinity bin</code>范围之中的时延值时,转向起始状态(S) (这种情况说明根据真实流量取样时,选择到了一个较大的<code>IAT</code>值,说明真实的通信双方当前已经停止通信或者处于其他数据包极其稀疏的阶段)</p>
+<p>综上可知, Padding机制不会影响对真实的数据包的处理或转发(不应用时延), 处理一个真实的数据包意味着当前选择的时延值失效,</p>
+<p>此时还会进行的操作: 在<code>HB</code>或<code>HG</code>中将<code>Token</code>返还给当前失效的时延值对应的<code>Bin</code>,并且从真实时延值对应的<code>Bin</code>处移除一个<code>Token</code>, 以此来校正分布</p>
+<p>个人理解:如果收到真实数据包导致时延值失效,那么当前失效的时延值肯定大于收到这个包和收到上个包之间的<code>IAT</code>(也就是当前真实的时延),这说明当前仍处在频繁收到真实包的阶段,<strong>选择一个时延值时会”暂时拿走”一个其对应<code>Bin</code>的<code>Token</code></strong>,此时如果不校正的话,高时延<code>Bin</code>的<code>Token</code>减少了一个,那么下次选择时,选择到更低时延的<code>Bin</code>的可能性会增加,多次循环后,可能会导致系统倾向选择到极低的时延值,导致在<code>burst mode</code>还没来得及接收真实数据包,就进入了<code>gap mode</code>,最终导致真假数据包混合.  因此,校正操作是归还之前”暂时拿走”的<code>Token</code>,并移除一个更短的真实时延对应<code>Bin</code>的<code>Token</code>, 那么下次选择就不会趋向于选择更短时延的<code>Token</code></p>
+<p>如果一个<code>Bin</code>的<code>Token</code>耗尽,那么在移除时会移除与之相邻的更大<code>Bin</code>的<code>Token</code></p>
+<p>如果所有<code>Bin</code>的<code>Token</code>都耗尽,那么<code>HB</code>或者<code>HG</code>返回初始状态</p>
+<p><br><br></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="http://gswanx.github.io">1ustinianus</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://gswanx.github.io/post/212eacc4.html">http://gswanx.github.io/post/212eacc4.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://gswanx.github.io" target="_blank">逃    避    現    實</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Tor/">Tor</a></div><div class="post_share"><div class="social-share" data-image="/img/headddd.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/post/75310f08.html"><img class="next-cover" src="/img/754566.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">TOR原理的不完全总结</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/post/3b7c15b1.html" title="在VPS上配置使用snowflake网桥的Tor"><img class="cover" src="/img/754566.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-03</div><div class="title">在VPS上配置使用snowflake网桥的Tor</div></div></a></div><div><a href="/post/75310f08.html" title="TOR原理的不完全总结"><img class="cover" src="/img/754566.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-18</div><div class="title">TOR原理的不完全总结</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/headddd.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">1ustinianus</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Cf4y1d7Ez"><i class="iconfont icon-yu"></i><span>歇会</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:trajanin117@proton.me" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://music.163.com/#/user/home?id=308450602" target="_blank" title="Music"><i class="fas fa-music"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0-%E6%A6%82%E8%BF%B0"><span class="toc-text">0_概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-connection-level-padding"><span class="toc-text">1_connection-level padding</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-circuit-level-padding"><span class="toc-text">2_circuit-level padding</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1PADDING%E5%8D%8F%E5%95%86"><span class="toc-text">2.1PADDING协商</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2%E5%AF%B9IPO%E9%93%BE%E8%B7%AF%E7%9A%84%E6%B7%B7%E6%B7%86"><span class="toc-text">2.2对IPO链路的混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3%E5%AF%B9RPO%E9%93%BE%E8%B7%AF%E7%9A%84%E6%B7%B7%E6%B7%86"><span class="toc-text">2.3对RPO链路的混淆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4Padding-Machine%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6"><span class="toc-text">2.4Padding Machine的工作机制</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/212eacc4.html" title="TOR的防御机制PADDING">TOR的防御机制PADDING</a><time datetime="2022-08-22T03:42:17.000Z" title="发表于 2022-08-22 11:42:17">2022-08-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/75310f08.html" title="TOR原理的不完全总结">TOR原理的不完全总结</a><time datetime="2022-08-18T08:52:41.000Z" title="发表于 2022-08-18 16:52:41">2022-08-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/6074697.html" title="2021美亚杯_团队赛下">2021美亚杯_团队赛下</a><time datetime="2022-08-10T10:46:53.000Z" title="发表于 2022-08-10 18:46:53">2022-08-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/71007601.html" title="2021美亚杯_团队赛上">2021美亚杯_团队赛上</a><time datetime="2022-08-10T10:46:45.000Z" title="发表于 2022-08-10 18:46:45">2022-08-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/post/51090d68.html" title="2021美亚杯_个人赛">2021美亚杯_个人赛</a><time datetime="2022-08-06T08:10:03.000Z" title="发表于 2022-08-06 16:10:03">2022-08-06</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/img/1185562.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2014 - 2022 By 1ustinianus</div><div class="footer_custom_text">func YHZ(){const 💕XAQ bool = True},2022.08.09</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div></div></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"></div><div class="aplayer no-destroy" data-id="6770516155" data-server="netease" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="true" muted></div><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="🤣,😘,🤨,🥱,😣,😤,😭" data-fontsize="25px" data-random="true" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/metingjs/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener scroll 
+  window.tocScrollFn && window.removeEventListener('scroll', window.tocScrollFn)
+  window.scrollCollect && window.removeEventListener('scroll', scrollCollect)
+
+  typeof preloader === 'object' && preloader.initLoading()
+  document.getElementById('rightside').style.cssText = "opacity: ''; transform: ''"
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
