@@ -1,5 +1,6 @@
 ---
-title: assembly
+title: 汇编语言基础知识复习
+description: 机器语言才是最好的语言
 abbrlink: 1a09ef0b
 date: 2022-10-29 23:33:28
 cover: false

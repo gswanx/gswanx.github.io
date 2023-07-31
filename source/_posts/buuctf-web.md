@@ -1,5 +1,5 @@
 ---
-title: buuctf_web部分刷题记录_PART1
+title: buuctf_web刷题记录_PART1
 description: 我是菜鸡
 cover: false
 tags:

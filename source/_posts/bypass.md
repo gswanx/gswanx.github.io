@@ -1,5 +1,6 @@
 ---
-title: 常用bypass
+title: 常用bypass（待更新）
+description: 我是菜鸡
 abbrlink: ef088674
 date: 2022-10-17 21:01:13
 cover: false
@@ -179,7 +180,9 @@ $a($_POST['a']);
 
 
 
-# flag(另外,某个参数过滤的比较过分时,尝试引入其他的GET或POST参数来执行命令等)
+# flag
+
+(另外,某个参数过滤的比较过分时,尝试引入其他的GET或POST参数来执行命令等)
 
 执行系统命令时支持`*`,`?`等模糊查找,例如:
 

